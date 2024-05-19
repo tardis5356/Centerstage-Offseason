@@ -31,17 +31,17 @@ public class Gripper extends SubsystemBase {
     }
 
     public void closeLeft(){
-        gL.setPosition(0.79);
+        gL.setPosition(BotPositions.GRIPPER_LEFT_CLOSED);
     }
     public void closeRight(){
-        gR.setPosition(0.22);
+        gR.setPosition(BotPositions.GRIPPER_RIGHT_CLOSED);
     }
 
     public void openLeft(){
-        gL.setPosition(0.33);
+        gL.setPosition(BotPositions.GRIPPER_LEFT_OPEN);
     }
     public void openRight(){
-        gR.setPosition(0.65);
+        gR.setPosition(BotPositions.GRIPPER_RIGHT_OPEN);
     }
 
 }
