@@ -22,7 +22,10 @@ public class RobotToStateCommand extends SequentialCommandGroup {
 //                            gripper.openRight();
 //                            gripper.openLeft();
 //                        })
+                        new InstantCommand(wrist::wristToTransition),
                         new WaitCommand(250),
+                        //put arm to transition here
+                        new WaitCommand(400),
                         new InstantCommand(wrist::wristToIntake)
                 );
                 break;
