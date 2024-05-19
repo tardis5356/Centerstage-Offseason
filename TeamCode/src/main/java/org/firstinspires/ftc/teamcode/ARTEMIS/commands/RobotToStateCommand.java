@@ -6,9 +6,10 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Gripper;
+import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Wrist;
 
 public class RobotToStateCommand extends SequentialCommandGroup {
-    public RobotToStateCommand(Gripper gripper, String state) {
+    public RobotToStateCommand(Gripper gripper, Wrist wrist, String state) {
         switch (state) {
             case "intake":
                 // logic here
@@ -21,11 +22,20 @@ public class RobotToStateCommand extends SequentialCommandGroup {
 //                            gripper.openRight();
 //                            gripper.openLeft();
 //                        })
-                        new WaitCommand(250)
+                        new WaitCommand(250),
+                        new InstantCommand(wrist::wristToIntake)
                 );
                 break;
             case "deposit":
                 // logic here
+                addCommands(
+                    new ParallelCommandGroup(
+                            new InstantCommand(gripper::closeLeft),
+                            new InstantCommand(gripper::closeRight)
+                    ),
+                new WaitCommand(250),
+                new InstantCommand(wrist::wristToDep)
+                );
                 break;
             case "dropPurple":
                 // logic here
