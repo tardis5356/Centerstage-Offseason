@@ -16,11 +16,11 @@ public class Wrist extends SubsystemBase {
     public void periodic(){ ;
     }
 
-    public void wristToDep(){sWP.setPosition(WRIST_TILT_INTAKE);
+    public void wristToDep(){sWP.setPosition(WRIST_TILT_DEPOSIT_LOW);
 
     }
 
-    public void wristToIntake(){sWP.setPosition(WRIST_TILT_DEPOSIT_LOW);
+    public void wristToIntake(){sWP.setPosition(WRIST_TILT_INTAKE);
 
     }
 
