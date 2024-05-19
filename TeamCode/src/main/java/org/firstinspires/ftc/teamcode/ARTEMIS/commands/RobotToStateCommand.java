@@ -28,7 +28,6 @@ public class RobotToStateCommand extends SequentialCommandGroup {
                         new WaitCommand(1000),
                         new InstantCommand(wrist::wristToIntake),
                         new InstantCommand(arm::goIntake)
-                        );
                 );
                 break;
             case "deposit":
