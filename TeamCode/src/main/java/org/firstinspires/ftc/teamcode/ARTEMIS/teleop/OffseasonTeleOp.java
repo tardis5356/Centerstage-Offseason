@@ -11,7 +11,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.ARTEMIS.commands.RobotToStateCommand;
+import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Gripper;
+import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Wrist;
 
 import dev.frozenmilk.dairy.calcified.Calcified;
 
@@ -24,12 +27,18 @@ public class OffseasonTeleOp extends CommandOpMode {
 
     private Gripper gripper;
 
+    private Arm arm;
+
+    private Wrist wrist;
+
     @Override
     public void initialize() {
         driver = new GamepadEx(gamepad1);
         manipulator = new GamepadEx(gamepad2);
 
         gripper = new Gripper(hardwareMap);
+        arm = new Arm(hardwareMap);
+        wrist = new Wrist(hardwareMap);
 
         /*
         A opens right
@@ -69,6 +78,8 @@ public class OffseasonTeleOp extends CommandOpMode {
                         ));
         new Trigger(() -> driver.getButton(GamepadKeys.Button.B))
                 .toggleWhenActive(gripper::closeRight, gripper::openRight);
+        new Trigger(() -> driver.getButton(GamepadKeys.Button.START))
+                .whenActive(new RobotToStateCommand(gripper, wrist, arm, "intake"));
     }
 
     @Override

@@ -5,4 +5,6 @@ public class BotPositions {
 
 // arm
     public static double ARM_INTAKE = 0.03, ARM_TRANSITION_POSITION = 0.12, ARM_DEPOSIT_LOW = 0.75;
+
+    static double WRIST_TILT_INTAKE = 0.29, WRIST_TILT_DEPOSIT_LOW = 0.69, WRIST_TILT_TRANSITION = 0.17;
 }
