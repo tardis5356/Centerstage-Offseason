@@ -10,6 +10,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.ARTEMIS.commands.RobotToStateCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Arm;
@@ -30,6 +32,8 @@ public class OffseasonTeleOp extends CommandOpMode {
     private Arm arm;
 
     private Wrist wrist;
+    double FB, LR, Rotation;
+    DcMotorEx mBL, mBR, mFL, mFR;
 
     @Override
     public void initialize() {
@@ -39,6 +43,16 @@ public class OffseasonTeleOp extends CommandOpMode {
         gripper = new Gripper(hardwareMap);
         arm = new Arm(hardwareMap);
         wrist = new Wrist(hardwareMap);
+
+        //init and set up drive motors
+        mFL = hardwareMap.get(DcMotorEx.class, "mFL");
+        mFR = hardwareMap.get(DcMotorEx.class, "mFR");
+        mBL = hardwareMap.get(DcMotorEx.class, "mBL");
+        mBR = hardwareMap.get(DcMotorEx.class, "mBR");
+
+        //this motor physically runs opposite. For convenience, reverse direction.
+        mBR.setDirection(DcMotorSimple.Direction.REVERSE);
+        mFR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         /*
         A opens right
@@ -107,6 +121,14 @@ public class OffseasonTeleOp extends CommandOpMode {
 //            // do stuff here
 //            gripper.openRight();
 //        }
+        FB = gamepad1.left_stick_y;
+        LR = -gamepad1.left_stick_x;
+        Rotation = -gamepad1.right_stick_x;
+
+        mFL.setPower(FB + LR + Rotation);
+        mFR.setPower(FB - LR - Rotation);
+        mBL.setPower(FB - LR + Rotation);
+        mBR.setPower(FB + LR - Rotation);
 
     }
 }
