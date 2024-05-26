@@ -10,6 +10,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.ARTEMIS.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.commands.RobotToStateCommand;
@@ -32,6 +34,8 @@ public class OffseasonTeleOp extends CommandOpMode {
     private Arm arm;
 
     private Wrist wrist;
+    double FB, LR, Rotation;
+    DcMotorEx mBL, mBR, mFL, mFR;
 
     private Intake intake;
 
@@ -45,6 +49,16 @@ public class OffseasonTeleOp extends CommandOpMode {
         wrist = new Wrist(hardwareMap);
         intake = new Intake(hardwareMap);
 
+        //init and set up drive motors
+        mFL = hardwareMap.get(DcMotorEx.class, "mFL");
+        mFR = hardwareMap.get(DcMotorEx.class, "mFR");
+        mBL = hardwareMap.get(DcMotorEx.class, "mBL");
+        mBR = hardwareMap.get(DcMotorEx.class, "mBR");
+
+        //this motor physically runs opposite. For convenience, reverse direction.
+        mBR.setDirection(DcMotorSimple.Direction.REVERSE);
+        mFR.setDirection(DcMotorSimple.Direction.REVERSE);
+
         /*
         A opens right
         B opens left
@@ -52,8 +66,13 @@ public class OffseasonTeleOp extends CommandOpMode {
         Y closes left
         */
 
+        //opens both grippers
         new Trigger(() -> driver.getButton(GamepadKeys.Button.A))
-                .whenActive(gripper::openRight); //only lets you call one method, but it's shorter to write
+                .whenActive(
+                        new SequentialCommandGroup(
+                                new InstantCommand(gripper::openRight),
+                                new InstantCommand(gripper::openLeft)
+                        ));
 //        new Trigger(() -> driver.getButton(GamepadKeys.Button.B))
 //                .whenActive(() -> { // lets you call multiple lines of code, but has more formatting
 //                    gripper.openLeft();
@@ -63,24 +82,30 @@ public class OffseasonTeleOp extends CommandOpMode {
 //        new Trigger(() -> driver.getButton(GamepadKeys.Button.X))
 //                .whenActive(()-> gripper.closeRight());
 
+        //toggles left gripper
         new Trigger(() -> driver.getButton(GamepadKeys.Button.X))
                 .toggleWhenActive(gripper::closeLeft, gripper::openLeft);
+        //closes both grippers
         new Trigger(() -> driver.getButton(GamepadKeys.Button.Y))
                 .whenActive(
                         new SequentialCommandGroup(
-                                new InstantCommand(gripper::closeLeft), // shortcut for calling methods from subsystem
-                                new WaitCommand(500),
-                                new InstantCommand(() -> {
-                                    gripper.openLeft(); // can run multiple lines
-                                    gripper.openRight();
-                                }),
-                                new WaitCommand(1000),
-                                new ParallelCommandGroup(
-                                        new InstantCommand(gripper::closeLeft),
-                                        new InstantCommand(gripper::closeRight)
-                                )
-
+                                new InstantCommand(gripper::closeRight),
+                                new InstantCommand(gripper::openLeft)
                         ));
+
+                                // shortcut for calling methods from subsystem
+//                                new WaitCommand(500),
+//                                new InstantCommand(() -> {
+//                                    gripper.openLeft(); // can run multiple lines
+//                                    gripper.openRight();
+//                                }),
+//                                new WaitCommand(1000),
+//                                new ParallelCommandGroup(
+//                                        new InstantCommand(gripper::closeLeft),
+//                                        new InstantCommand(gripper::closeRight)
+//                                )
+
+        //toggles right gripper
         new Trigger(() -> driver.getButton(GamepadKeys.Button.B))
                 .toggleWhenActive(gripper::closeRight, gripper::openRight);
 
@@ -118,6 +143,14 @@ public class OffseasonTeleOp extends CommandOpMode {
 //            // do stuff here
 //            gripper.openRight();
 //        }
+        FB = gamepad1.left_stick_y;
+        LR = -gamepad1.left_stick_x;
+        Rotation = -gamepad1.right_stick_x;
+
+        mFL.setPower(FB + LR + Rotation);
+        mFR.setPower(FB - LR - Rotation);
+        mBL.setPower(FB - LR + Rotation);
+        mBR.setPower(FB + LR - Rotation);
 
     }
 }
