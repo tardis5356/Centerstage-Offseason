@@ -78,8 +78,14 @@ public class OffseasonTeleOp extends CommandOpMode {
                         ));
         new Trigger(() -> driver.getButton(GamepadKeys.Button.B))
                 .toggleWhenActive(gripper::closeRight, gripper::openRight);
+
+        //to intake trigger
         new Trigger(() -> driver.getButton(GamepadKeys.Button.START))
                 .whenActive(new RobotToStateCommand(gripper, wrist, arm, "intake"));
+
+        //to deposite trigger
+        new Trigger(() -> driver.getButton(GamepadKeys.Button.BACK))
+                .whenActive(new RobotToStateCommand(gripper, wrist, arm, "deposit"));
     }
 
     @Override
