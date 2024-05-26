@@ -11,9 +11,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.ARTEMIS.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.commands.RobotToStateCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Gripper;
+import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Wrist;
 
 import dev.frozenmilk.dairy.calcified.Calcified;
@@ -31,6 +33,8 @@ public class OffseasonTeleOp extends CommandOpMode {
 
     private Wrist wrist;
 
+    private Intake intake;
+
     @Override
     public void initialize() {
         driver = new GamepadEx(gamepad1);
@@ -39,6 +43,7 @@ public class OffseasonTeleOp extends CommandOpMode {
         gripper = new Gripper(hardwareMap);
         arm = new Arm(hardwareMap);
         wrist = new Wrist(hardwareMap);
+        intake = new Intake(hardwareMap);
 
         /*
         A opens right
@@ -81,11 +86,28 @@ public class OffseasonTeleOp extends CommandOpMode {
 
         //to intake trigger
         new Trigger(() -> driver.getButton(GamepadKeys.Button.START))
-                .whenActive(new RobotToStateCommand(gripper, wrist, arm, "intake"));
+                .whenActive(new RobotToStateCommand(gripper, wrist, arm, intake, "intake"));
 
         //to deposite trigger
         new Trigger(() -> driver.getButton(GamepadKeys.Button.BACK))
-                .whenActive(new RobotToStateCommand(gripper, wrist, arm, "deposit"));
+                .whenActive(new RobotToStateCommand(gripper, wrist, arm, intake,"deposit"));
+
+//        run intake
+        new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)>0.05)
+                .whenActive(new IntakeCommand(gripper, intake));
+
+        new Trigger(()-> (intake.getIntakeLeftDist())<15)
+                .whenActive((gripper::closeLeft));
+
+        new Trigger(()-> (intake.getIntakeRightDist())<15)
+                .whenActive((gripper::closeRight));
+
+        new Trigger(()-> (intake.getIntakeRightDist())<15 && intake.getIntakeLeftDist()<15)
+                .whenActive(new SequentialCommandGroup(
+                        new WaitCommand(2000),
+                        (new RobotToStateCommand(gripper, wrist, arm, intake, "transition"))
+                ));
+
     }
 
     @Override

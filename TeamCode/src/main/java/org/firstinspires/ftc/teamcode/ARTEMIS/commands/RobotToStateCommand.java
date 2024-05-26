@@ -7,13 +7,14 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Gripper;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Wrist;
 
 import java.util.concurrent.TimeUnit;
 
 public class RobotToStateCommand extends SequentialCommandGroup {
     public String robotState;
-    public RobotToStateCommand(Gripper gripper, Wrist wrist, Arm arm, String state) {
+    public RobotToStateCommand(Gripper gripper, Wrist wrist, Arm arm, Intake intake, String state) {
         switch (state) {
             case "intake":
                 // logic here
@@ -63,8 +64,28 @@ public class RobotToStateCommand extends SequentialCommandGroup {
 
                 );
 
+
+
                 break;
-            case "dropPurple":
+            case "transition":
+                // logic here
+                if(robotState == "transition"){
+                    return;
+                }
+                robotState = "transition";
+
+                addCommands(
+                        new InstantCommand(intake::setINTAKE_UP),
+                        new InstantCommand(arm::goTransfer),
+                        new WaitCommand(1500),
+                        new InstantCommand(wrist::wristToTransition),
+                        new InstantCommand(intake::setINTAKE_OUT),
+                        new WaitCommand(500),
+                        new InstantCommand(intake::setINTAKE_STOP)
+                );
+                break;
+
+                case "dropPurple":
                 // logic here
                 break;
         }
