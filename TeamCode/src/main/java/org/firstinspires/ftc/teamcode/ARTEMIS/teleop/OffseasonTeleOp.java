@@ -47,8 +47,13 @@ public class OffseasonTeleOp extends CommandOpMode {
         Y closes left
         */
 
+        //opens both grippers
         new Trigger(() -> driver.getButton(GamepadKeys.Button.A))
-                .whenActive(gripper::openRight); //only lets you call one method, but it's shorter to write
+                .whenActive(
+                        new SequentialCommandGroup(
+                                new InstantCommand(gripper::openRight),
+                                new InstantCommand(gripper::openLeft)
+                        ));
 //        new Trigger(() -> driver.getButton(GamepadKeys.Button.B))
 //                .whenActive(() -> { // lets you call multiple lines of code, but has more formatting
 //                    gripper.openLeft();
@@ -58,24 +63,30 @@ public class OffseasonTeleOp extends CommandOpMode {
 //        new Trigger(() -> driver.getButton(GamepadKeys.Button.X))
 //                .whenActive(()-> gripper.closeRight());
 
+        //toggles left gripper
         new Trigger(() -> driver.getButton(GamepadKeys.Button.X))
                 .toggleWhenActive(gripper::closeLeft, gripper::openLeft);
+        //closes both grippers
         new Trigger(() -> driver.getButton(GamepadKeys.Button.Y))
                 .whenActive(
                         new SequentialCommandGroup(
-                                new InstantCommand(gripper::closeLeft), // shortcut for calling methods from subsystem
-                                new WaitCommand(500),
-                                new InstantCommand(() -> {
-                                    gripper.openLeft(); // can run multiple lines
-                                    gripper.openRight();
-                                }),
-                                new WaitCommand(1000),
-                                new ParallelCommandGroup(
-                                        new InstantCommand(gripper::closeLeft),
-                                        new InstantCommand(gripper::closeRight)
-                                )
-
+                                new InstantCommand(gripper::closeRight),
+                                new InstantCommand(gripper::openLeft)
                         ));
+
+                                // shortcut for calling methods from subsystem
+//                                new WaitCommand(500),
+//                                new InstantCommand(() -> {
+//                                    gripper.openLeft(); // can run multiple lines
+//                                    gripper.openRight();
+//                                }),
+//                                new WaitCommand(1000),
+//                                new ParallelCommandGroup(
+//                                        new InstantCommand(gripper::closeLeft),
+//                                        new InstantCommand(gripper::closeRight)
+//                                )
+
+        //toggles right gripper
         new Trigger(() -> driver.getButton(GamepadKeys.Button.B))
                 .toggleWhenActive(gripper::closeRight, gripper::openRight);
 
