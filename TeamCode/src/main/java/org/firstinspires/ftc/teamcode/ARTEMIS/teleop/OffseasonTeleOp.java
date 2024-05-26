@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.ARTEMIS.commands.RobotToStateCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Gripper;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Wrist;
 
 import dev.frozenmilk.dairy.calcified.Calcified;
@@ -34,6 +35,7 @@ public class OffseasonTeleOp extends CommandOpMode {
     private Arm arm;
 
     private Wrist wrist;
+    private Lift lift;
     double FB, LR, Rotation;
     DcMotorEx mBL, mBR, mFL, mFR;
 
@@ -48,7 +50,7 @@ public class OffseasonTeleOp extends CommandOpMode {
         arm = new Arm(hardwareMap);
         wrist = new Wrist(hardwareMap);
         intake = new Intake(hardwareMap);
-
+        lift = new Lift(hardwareMap);
         //init and set up drive motors
         mFL = hardwareMap.get(DcMotorEx.class, "mFL");
         mFR = hardwareMap.get(DcMotorEx.class, "mFR");
@@ -146,11 +148,12 @@ public class OffseasonTeleOp extends CommandOpMode {
         FB = gamepad1.left_stick_y;
         LR = -gamepad1.left_stick_x;
         Rotation = -gamepad1.right_stick_x;
+        lift.ManualMode(gamepad2.left_stick_y, gamepad2.right_stick_y);
+       // mFL.setPower(FB + LR + Rotation);
+        //mFR.setPower(FB - LR - Rotation);
+        //mBL.setPower(FB - LR + Rotation);
+        //mBR.setPower(FB + LR - Rotation);
 
-        mFL.setPower(FB + LR + Rotation);
-        mFR.setPower(FB - LR - Rotation);
-        mBL.setPower(FB - LR + Rotation);
-        mBR.setPower(FB + LR - Rotation);
 
     }
 }
