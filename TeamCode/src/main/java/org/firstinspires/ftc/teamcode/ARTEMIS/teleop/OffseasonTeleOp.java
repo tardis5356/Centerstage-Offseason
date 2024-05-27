@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ARTEMIS.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
@@ -13,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ARTEMIS.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.commands.RobotToStateCommand;
 import org.firstinspires.ftc.teamcode.ARTEMIS.subsystems.Arm;
@@ -41,8 +44,10 @@ public class OffseasonTeleOp extends CommandOpMode {
 
     private Intake intake;
 
+
     @Override
     public void initialize() {
+        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         driver = new GamepadEx(gamepad1);
         manipulator = new GamepadEx(gamepad2);
 
@@ -153,7 +158,10 @@ public class OffseasonTeleOp extends CommandOpMode {
         //mFR.setPower(FB - LR - Rotation);
         //mBL.setPower(FB - LR + Rotation);
         //mBR.setPower(FB + LR - Rotation);
-
-
+        telemetry.addData("liftPosition", lift.getCurrentPosition());
+        telemetry.addData("liftPID", lift.getCurrentPID());
+        telemetry.addData("liftMotorPower", lift.getCurrentMotorPower());
+        telemetry.update();
     }
+
 }
