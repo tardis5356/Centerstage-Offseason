@@ -9,28 +9,35 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
 @Config
 public class Lift extends SubsystemBase {
     DcMotorEx mLR, mLL;
     TouchSensor touchLift;
-    double joystickPowerInput = 0;
+
     PIDController controller;
+
     public static double targetPosition = 0;
+    double joystickPowerInput = 0;
     double motorPower = 0;
 
     public Lift(HardwareMap hardwareMap) {
         mLR = hardwareMap.get(DcMotorEx.class, "mLR");
         mLL = hardwareMap.get(DcMotorEx.class, "mLL");
+
         touchLift = hardwareMap.get(TouchSensor.class, "touchLift");
+
         mLR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         mLL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         mLL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mLL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mLR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         mLL.setDirection(DcMotorSimple.Direction.REVERSE);
         mLR.setDirection(DcMotorSimple.Direction.REVERSE);
-        controller = new PIDController(0.02, 0, 0);
 
+        controller = new PIDController(0.02, 0, 0);
     }
 
     public void ManualMode(double left, double right) {
@@ -49,6 +56,7 @@ public class Lift extends SubsystemBase {
         } else {
             motorPower = -0.09;
         }
+
         mLL.setPower(motorPower);
         mLR.setPower(motorPower);
     }
@@ -56,10 +64,12 @@ public class Lift extends SubsystemBase {
     public double getCurrentPosition() {
         return mLL.getCurrentPosition();
     }
-    public double getCurrentPID () {
+
+    public double getCurrentPID() {
         return -controller.calculate(-mLL.getCurrentPosition(), targetPosition);
     }
-    public double getCurrentMotorPower () {
+
+    public double getCurrentMotorPower() {
         return motorPower;
     }
 }
