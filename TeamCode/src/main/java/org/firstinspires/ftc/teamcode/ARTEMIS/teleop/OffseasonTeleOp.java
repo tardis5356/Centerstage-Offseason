@@ -154,7 +154,7 @@ public class OffseasonTeleOp extends CommandOpMode {
         LR = -gamepad1.left_stick_x;
         Rotation = -gamepad1.right_stick_x;
         lift.ManualMode(gamepad2.left_stick_y, gamepad2.right_stick_y);
-       // mFL.setPower(FB + LR + Rotation);
+        //mFL.setPower(FB + LR + Rotation);
         //mFR.setPower(FB - LR - Rotation);
         //mBL.setPower(FB - LR + Rotation);
         //mBR.setPower(FB + LR - Rotation);
