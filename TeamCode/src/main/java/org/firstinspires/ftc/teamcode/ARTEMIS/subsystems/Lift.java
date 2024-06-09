@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.ARTEMIS.subsystems;
 
-import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@Config
+//@Config
 public class Lift extends SubsystemBase {
     DcMotorEx mLR, mLL;
     TouchSensor touchLift;
