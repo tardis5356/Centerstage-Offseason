@@ -8,10 +8,13 @@ import org.firstinspires.ftc.teamcode.DEMOS.demoBotPositions;
 
 public class PrimusGripper extends SubsystemBase {
 
-    Servo sG;
+    Servo sR, sL;
+
+
 
     public PrimusGripper(HardwareMap hardwareMap){
-        sG = hardwareMap.get(Servo.class, "sG");
+        sR = hardwareMap.get(Servo.class, "sR");
+        sL = hardwareMap.get(Servo.class, "sL");
     }
 
     @Override
@@ -19,7 +22,11 @@ public class PrimusGripper extends SubsystemBase {
 
     }
 
-    public void openGripper(){sG.setPosition(demoBotPositions.opennedGripper);}
+    public void leftGripperOpen(){sL.setPosition(demoBotPositions.leftGripperOpen);}
+    public void rightGripperOpen(){sR.setPosition(demoBotPositions.rightGripperOpen);}
+    public void leftGripperClosed(){sL.setPosition(demoBotPositions.leftGripperClosed);}
+    public void rightGripperClosed(){sR.setPosition(demoBotPositions.rightGripperClosed);}
 
-    public void closeGripper(){sG.setPosition(demoBotPositions.closedGripper);}
+
+
 }
