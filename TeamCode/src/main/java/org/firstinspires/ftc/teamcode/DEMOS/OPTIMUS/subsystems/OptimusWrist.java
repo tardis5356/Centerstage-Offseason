@@ -9,11 +9,28 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.DEMOS.demoBotPositions;
+
 public class OptimusWrist extends SubsystemBase {
     Servo sW;
 
     public OptimusWrist(HardwareMap hardwareMap) {
         sW = hardwareMap.get(Servo.class, "sW");
 
+    }
+
+    @Override
+    public void periodic() {
+    }
+
+
+    public void innitializeWrist(){
+        sW.setPosition(demoBotPositions.innitialWristPosition);
+    }
+    public void wristUp(){
+        sW.setPosition(demoBotPositions.upWristPosition);
+    }
+    public void wristDown(){
+        sW.setPosition(demoBotPositions.downWristPosition);
     }
 }

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DEMOS.OPTIMUS.subsystems.OptimusArm;
 import org.firstinspires.ftc.teamcode.DEMOS.OPTIMUS.subsystems.OptimusGripper;
+import org.firstinspires.ftc.teamcode.DEMOS.OPTIMUS.subsystems.OptimusWrist;
 
 @TeleOp(name = "OptimusTeleOp", group = "Demos")
 //@Disabled
@@ -25,6 +26,7 @@ public class OptimusTeleop extends CommandOpMode {
 
     private OptimusGripper gripper;
     private OptimusArm arm;
+    OptimusWrist wrist;
 
     @Override
     public void initialize() {
@@ -44,12 +46,21 @@ public class OptimusTeleop extends CommandOpMode {
 
         arm = new OptimusArm(hardwareMap);
 
-
+        wrist = new OptimusWrist(hardwareMap);
 
         //Triggers!!!
 
-        new Trigger(() -> drive.getButton(GamepadKeys.Button.RIGHT_BUMPER) || drive.getButton(GamepadKeys.Button.LEFT_BUMPER))
+        new Trigger(() -> apendage.getButton(GamepadKeys.Button.RIGHT_BUMPER) || apendage.getButton(GamepadKeys.Button.LEFT_BUMPER))
                 .toggleWhenActive(gripper::closeGripper, gripper::openGripper);
+
+        new Trigger(() -> apendage.getButton(GamepadKeys.Button.DPAD_UP))
+                .whenActive(wrist::wristUp);
+
+        new Trigger(() -> apendage.getButton(GamepadKeys.Button.DPAD_DOWN))
+                .whenActive(wrist::wristDown);
+
+        new Trigger(() -> opModeIsActive())
+                .whenActive(wrist::innitializeWrist);
 
         new Trigger(() -> apendage.getButton(GamepadKeys.Button.A))
                 .whenActive(() -> arm.setTPos(50));
