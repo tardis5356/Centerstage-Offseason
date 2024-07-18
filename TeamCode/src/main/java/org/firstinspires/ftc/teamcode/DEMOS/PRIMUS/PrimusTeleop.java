@@ -28,6 +28,8 @@ public class PrimusTeleop extends CommandOpMode {
 
     private TouchSensor aTouchLim;
     double mArmPower;
+    double ArmPos;
+    double PosDif;
 
 
     @Override
@@ -60,7 +62,7 @@ public class PrimusTeleop extends CommandOpMode {
     @Override
     public void run() {
         super.run();
-
+        ArmPos = mBR.getCurrentPosition() + PosDif;
         //trust the math i've done it many times
         mBL.setPower((-drive.getLeftY()/1.5)-(drive.getRightX()/1.5));
         mBR.setPower((drive.getLeftY()/1.5)-(drive.getRightX()/1.5));
@@ -78,14 +80,24 @@ public class PrimusTeleop extends CommandOpMode {
         telemetry.update();
 
         if(aTouchLim.isPressed() == true) {
-            if(arm.getRightY() < 0){
+            ArmPos = 0;
+            PosDif = ArmPos - mBR.getCurrentPosition();
+                if(arm.getRightY() < 0){
+                mArmPower = 0;
+                }
+                else{
+                mArmPower = arm.getRightY();
+                }
+        }
+        else if (ArmPos < -300) {
+            if(arm.getRightY() > 0){
                 mArmPower = 0;
             }
             else{
                 mArmPower = arm.getRightY();
             }
         }
-        else{
+        else {
             mArmPower = arm.getRightY();
         }
 
