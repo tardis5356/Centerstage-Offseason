@@ -11,9 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DEMOS.FRED.subsystems.FredArm;
-import org.firstinspires.ftc.teamcode.DEMOS.OPTIMUS.subsystems.OptimusArm;
-import org.firstinspires.ftc.teamcode.DEMOS.OPTIMUS.subsystems.OptimusGripper;
-import org.firstinspires.ftc.teamcode.DEMOS.OPTIMUS.subsystems.OptimusWrist;
+import org.firstinspires.ftc.teamcode.DEMOS.FRED.subsystems.FredWrist;
 
 @TeleOp(name = "FredTeleop", group = "Demos")
 //@Disabled
@@ -25,6 +23,8 @@ public class FredTeleop extends CommandOpMode {
     private DcMotorEx mL, mR;
 
     private FredArm arm;
+
+    private FredWrist wrist;
 
     @Override
     public void initialize () {
@@ -45,15 +45,15 @@ public class FredTeleop extends CommandOpMode {
         //Triggers
         //        new Trigger(() -> apendage.getButton(GamepadKeys.Button.RIGHT_BUMPER) || apendage.getButton(GamepadKeys.Button.LEFT_BUMPER))
         //                .toggleWhenActive(gripper::closeGripper, gripper::openGripper);
+
+        new Trigger(() -> apendage.getButton(GamepadKeys.Button.DPAD_UP))
+                .whenActive(wrist::wristUp);
         //
-        //        new Trigger(() -> apendage.getButton(GamepadKeys.Button.DPAD_UP))
-        //                .whenActive(wrist::wristUp);
+        new Trigger(() -> apendage.getButton(GamepadKeys.Button.DPAD_DOWN))
+                .whenActive(wrist::wristDown);
         //
-        //        new Trigger(() -> apendage.getButton(GamepadKeys.Button.DPAD_DOWN))
-        //                .whenActive(wrist::wristDown);
-        //
-        //        new Trigger(() -> opModeIsActive())
-        //                .whenActive(wrist::innitializeWrist);
+        new Trigger(() -> opModeIsActive())
+                .whenActive(wrist::innitializeWrist);
         //
         //        new Trigger(() -> apendage.getButton(GamepadKeys.Button.A))
         //                .whenActive(() -> arm.setTPos(50));
