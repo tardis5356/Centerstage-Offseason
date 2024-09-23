@@ -39,10 +39,15 @@ public class TestBedTeleop extends LinearOpMode {
             //map motor power to vars (tb tested)
             //depending on the wheel, forward back, left right, and rotation's power may be different
             //think, if fb is positive, thus the bot should move forward, will the motor drive the bot forward if its power is positive.
-            mFL.setPower(FB + LR + Rotation);
-            mFR.setPower(FB - LR - Rotation);
-            mBL.setPower(FB - LR + Rotation);
-            mBR.setPower(FB + LR - Rotation);
+//            mFL.setPower(FB + LR + Rotation);
+//            mFR.setPower(FB - LR - Rotation);
+//            mBL.setPower(FB - LR + Rotation);
+//            mBR.setPower(FB + LR - Rotation);
+
+            mFL.setPower(-gamepad1.left_stick_y);
+            mFR.setPower(gamepad1.left_stick_y);
+            mBL.setPower(-gamepad1.left_stick_y);
+            mBR.setPower(gamepad1.left_stick_y);
         }
     }
 }

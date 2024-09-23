@@ -13,14 +13,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DEMOS.FRED.subsystems.FredArm;
 import org.firstinspires.ftc.teamcode.DEMOS.FRED.subsystems.FredWrist;
 
-@TeleOp(name = "FredTeleop", group = "Demos")
+@TeleOp(name = "FredTeleop", group = "Teleop")
 //@Disabled
 public class FredTeleop extends CommandOpMode {
 
     //Gamepads
     private GamepadEx drive, apendage;
     //Drive Motors
-    private DcMotorEx mL, mR;
+    private DcMotorEx mFL, mFR, mBL, mBR;
 
     private FredArm arm;
 
@@ -37,8 +37,11 @@ public class FredTeleop extends CommandOpMode {
         //define intake
 
         //define drive motors slash map them
-        mL = hardwareMap.get(DcMotorEx.class, "mL");
-        mR = hardwareMap.get(DcMotorEx.class, "mR");
+        mBL = hardwareMap.get(DcMotorEx.class, "mBL");
+        mBR = hardwareMap.get(DcMotorEx.class, "mBR");
+        mFL = hardwareMap.get(DcMotorEx.class, "mFL");
+        mFR = hardwareMap.get(DcMotorEx.class, "mFR");
+
 
         arm = new FredArm(hardwareMap);
 
@@ -62,8 +65,10 @@ public class FredTeleop extends CommandOpMode {
         public void run() {
                     super.run();
 
-                    mL.setPower((drive.getLeftY()/1.5)-(drive.getRightX())/2);
-                    mR.setPower((-drive.getLeftY()/1.5)-(drive.getRightX()/2));
+           mBR.setPower(drive.getLeftY() + drive.getLeftX() - drive.getRightX());
+           mBL.setPower(drive.getLeftY() - drive.getLeftX() + drive.getRightX());
+           mFR.setPower(drive.getLeftY() - drive.getLeftX() - drive.getRightX());
+           mFL.setPower(drive.getLeftY() + drive.getLeftX() + drive.getRightX());
         }
 
 }
