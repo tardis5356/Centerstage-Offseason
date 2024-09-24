@@ -3,25 +3,21 @@ package org.firstinspires.ftc.teamcode.DEMOS.FRED;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.DEMOS.FRED.subsystems.FredArm;
-import org.firstinspires.ftc.teamcode.DEMOS.FRED.subsystems.FredWrist;
 
 @TeleOp(name = "AiTeleop", group = "Teleop")
 public class AiExperimentalTele extends CommandOpMode {
 
-    private GamepadEx drive, appendage;
+    private GamepadEx drive;
     private DcMotorEx mFL, mFR, mBL, mBR;
-    private FredArm arm;
-    private FredWrist wrist;
     private ElapsedTime runtime = new ElapsedTime();
 
     private static final double SPIN_POWER = 0.5;
@@ -33,15 +29,13 @@ public class AiExperimentalTele extends CommandOpMode {
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive = new GamepadEx(gamepad1);
-        appendage = new GamepadEx(gamepad2);
 
         mBL = hardwareMap.get(DcMotorEx.class, "mBL");
         mBR = hardwareMap.get(DcMotorEx.class, "mBR");
         mFL = hardwareMap.get(DcMotorEx.class, "mFL");
         mFR = hardwareMap.get(DcMotorEx.class, "mFR");
 
-        arm = new FredArm(hardwareMap);
-        wrist = new FredWrist(hardwareMap);
+        mBR.setDirection(DcMotor.Direction.REVERSE);
 
         setupTriggers();
     }
@@ -58,15 +52,6 @@ public class AiExperimentalTele extends CommandOpMode {
 
         new Trigger(() -> drive.getButton(GamepadKeys.Button.B))
                 .whenActive(() -> programmedMove("right"));
-
-        new Trigger(() -> appendage.getButton(GamepadKeys.Button.DPAD_UP))
-                .whenActive(wrist::wristUp);
-
-        new Trigger(() -> appendage.getButton(GamepadKeys.Button.DPAD_DOWN))
-                .whenActive(wrist::wristDown);
-
-        new Trigger(() -> opModeIsActive())
-                .whenActive(wrist::innitializeWrist);
     }
 
     @Override
@@ -88,9 +73,6 @@ public class AiExperimentalTele extends CommandOpMode {
         mBL.setPower(backLeftPower);
         mFR.setPower(frontRightPower);
         mBR.setPower(backRightPower);
-
-        // Manual arm control (if needed)
-        // arm.ManualMode(appendage.getLeftY(), -appendage.getRightY());
     }
 
     private void spin360() {

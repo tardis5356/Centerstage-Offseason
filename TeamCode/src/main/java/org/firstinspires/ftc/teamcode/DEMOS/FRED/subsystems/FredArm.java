@@ -20,7 +20,6 @@ public class FredArm extends SubsystemBase {
         magneticLim = hardwareMap.get(TouchSensor.class, "armLimit");
 
         mA.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-
         mA.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         mA.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
